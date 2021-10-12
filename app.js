@@ -67,13 +67,13 @@ app.delete('/books/:id', (req, res) => {
 // UPDATE table_name
 // SET column1=value, column2=value2,...
 // WHERE some_column=some_value 
-app.put('/posts/:id', (req, res) => {
+app.put('/books/:id', (req, res) => {
     const sql = `
-        UPDATE posts
-        SET title = ?, body = ?
+        UPDATE books
+        SET title = ?, author = ?, category = ?, pages = ?
         WHERE id = ?
         `;
-    con.query(sql, [req.body.title, req.body.body, req.params.id], (err, result) => {
+    con.query(sql, [req.body.title, req.body.author, req.body.category, req.body.pages, req.params.id], (err, result) => {
         if (err) {
             throw err;
         }
@@ -81,10 +81,40 @@ app.put('/posts/:id', (req, res) => {
     })
 })
 
-
 // rodo visus postus
 app.get('/books', (req, res) => {
     con.query('SELECT * FROM books ORDER BY id DESC', (err, results) => {
+        if (err) {
+            throw err;
+        }
+        res.json(results);
+    })
+})
+
+// skaiciuoka irasus
+// SELECT COUNT(ProductID) AS NumberOfProducts FROM Products;
+app.get('/books/count', (req, res) => {
+    con.query('SELECT COUNT(id) AS booksCount FROM books', (err, results) => {
+        if (err) {
+            throw err;
+        }
+        res.json(results);
+    })
+})
+
+// skaiciuoja kiekvienos kategorijos knygas
+// SELECT COUNT(CustomerID), Country
+// FROM Customers
+// GROUP BY Country
+// ORDER BY COUNT(CustomerID) DESC;
+
+app.get('/books/cat-count', (req, res) => {
+    con.query(`SELECT
+    COUNT(id) AS count, category
+    FROM books
+    GROUP BY category
+    ORDER BY COUNT(id) DESC
+    `, (err, results) => {
         if (err) {
             throw err;
         }
