@@ -14,14 +14,14 @@ const con = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'root',
-    database: 'kolt'
+    database: 'ferma'
 })
 
 con.connect(err => {
     if (err) {
         throw err;
     }
-    console.log('Yes!');
+    console.log('Server Online!');
 })
 
 
@@ -29,14 +29,14 @@ con.connect(err => {
 // Iraso nauja posta
 // INSERT INTO table_name (column1, column2, column3,...)
 // VALUES (value1, value2, value3,...)
-app.post('/scooters', (req, res) => {
+app.post('/cows', (req, res) => {
     console.log(req.body.title)
     const sql = `
-        INSERT INTO scooters
-        (registration_code, is_busy, last_use_time, total_ride_kilometres)
+        INSERT INTO cow_farm
+        (name, weight, total_milk, last_milking_time)
         VALUES (?, ?, ?, ?)
         `;
-    con.query(sql, [req.body.registration_code, req.body.is_busy, req.body.last_use_time, req.body.total_ride_kilometres], (err, result) => {
+    con.query(sql, [req.body.name, req.body.weight, req.body.total_milk, req.body.last_milking_time], (err, result) => {
         if (err) {
             throw err;
         }
@@ -47,9 +47,9 @@ app.post('/scooters', (req, res) => {
 // Trina posta
 // DELETE FROM table_name
 // WHERE some_column = some_value
-app.delete('/scooters/:id', (req, res) => {
+app.delete('/cows/:id', (req, res) => {
     const sql = `
-        DELETE FROM scooters
+        DELETE FROM cow_farm
         WHERE id = ?
         `;
     con.query(sql, [req.params.id], (err, result) => {
@@ -79,8 +79,8 @@ app.put('/scooters/:id', (req, res) => {
 })
 
 // rodo visus postus
-app.get('/scooters', (req, res) => {
-    con.query('SELECT * FROM scooters ORDER BY id DESC', (err, results) => {
+app.get('/cows', (req, res) => {
+    con.query('SELECT * FROM cow_farm ORDER BY id ASC', (err, results) => {
         if (err) {
             throw err;
         }
