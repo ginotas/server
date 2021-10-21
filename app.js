@@ -21,7 +21,7 @@ con.connect(err => {
     if (err) {
         throw err;
     }
-    console.log('Server Online!');
+    console.log('Serveris veikia!! (kol nenuluzo:)');
 })
 
 
@@ -64,13 +64,13 @@ app.delete('/cows/:id', (req, res) => {
 // UPDATE table_name
 // SET column1=value, column2=value2,...
 // WHERE some_column=some_value 
-app.put('/scooters/:id', (req, res) => {
+app.put('/cows/:id', (req, res) => {
     const sql = `
-        UPDATE scooters
-        SET registration_code = ?, is_busy = ?, last_use_time = ?, total_ride_kilometres = ?
+        UPDATE cow_farm
+        SET name = ?, weight = ?, total_milk = ?, last_milking_time = ?
         WHERE id = ?
         `;
-    con.query(sql, [req.body.registration_code, req.body.is_busy, req.body.last_use_time, req.body.total_ride_kilometres, req.params.id], (err, result) => {
+    con.query(sql, [req.body.name, req.body.weight, req.body.total_milk, req.body.last_milking_time, req.params.id], (err, result) => {
         if (err) {
             throw err;
         }
@@ -90,8 +90,8 @@ app.get('/cows', (req, res) => {
 
 // skaiciuoka irasus
 // SELECT COUNT(ProductID) AS NumberOfProducts FROM Products;
-app.get('/scooters/count', (req, res) => {
-    con.query('SELECT COUNT(id) AS scooterCount FROM scooters', (err, results) => {
+app.get('/cows/count', (req, res) => {
+    con.query('SELECT COUNT(id) AS totalCow FROM cow_farm', (err, results) => {
         if (err) {
             throw err;
         }
@@ -99,10 +99,10 @@ app.get('/scooters/count', (req, res) => {
     })
 })
 
-// skaiciuoka km
+// skaiciuoka total milk
 // SELECT COUNT(ProductID) AS NumberOfProducts FROM Products;
-app.get('/scooters/countKm', (req, res) => {
-    con.query('SELECT SUM(total_ride_kilometres) AS scooterKm FROM scooters', (err, results) => {
+app.get('/cows/totalMilk', (req, res) => {
+    con.query('SELECT SUM(total_milk) AS totalMilk FROM cow_farm', (err, results) => {
         if (err) {
             throw err;
         }
